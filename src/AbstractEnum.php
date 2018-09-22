@@ -110,6 +110,6 @@ abstract class AbstractEnum implements Enum
      */
     final protected function getAllowedInterfaces(): array
     {
-        return [Enum::class, self::class];
+        return [Enum::class];
     }
 }
