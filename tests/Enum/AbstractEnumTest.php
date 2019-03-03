@@ -23,7 +23,7 @@ class AbstractEnumTest extends TestCase
 {
     /**
      * @expectedException \Gears\Enum\Exception\InvalidEnumValueException
-     * @expectedExceptionMessageRegExp /^unknown is not a valid value for enum .+$/
+     * @expectedExceptionMessage unknown is not a valid value for enum Gears\Enum\Tests\Stub\AbstractEnumStub
      */
     public function testInvalidValue(): void
     {
@@ -37,5 +37,32 @@ class AbstractEnumTest extends TestCase
         $this->assertSame(AbstractEnumStub::VALUE_ONE, $stub->getValue());
         $this->assertTrue($stub->isEqualTo(new AbstractEnumStub(AbstractEnumStub::VALUE_ONE)));
         $this->assertFalse($stub->isEqualTo(new AbstractEnumStub(AbstractEnumStub::VALUE_TWO)));
+    }
+
+    /**
+     * @expectedException \Gears\Enum\Exception\InvalidEnumValueException
+     * @expectedExceptionMessage UNKNOWN is not a valid value for enum Gears\Enum\Tests\Stub\AbstractEnumStub
+     */
+    public function testInvalidStaticValue(): void
+    {
+        AbstractEnumStub::UNKNOWN();
+    }
+
+    /**
+     * @expectedException \Gears\Enum\Exception\InvalidEnumValueException
+     * @expectedExceptionMessage Enum static constructor must be called with no parameters
+     */
+    public function testInvalidStaticCreation(): void
+    {
+        AbstractEnumStub::VALUE_ONE('param');
+    }
+
+    public function testStaticCreation(): void
+    {
+        $stub = AbstractEnumStub::VALUE_TWO();
+
+        $this->assertSame(AbstractEnumStub::VALUE_TWO, $stub->getValue());
+        $this->assertTrue($stub->isEqualTo(new AbstractEnumStub(AbstractEnumStub::VALUE_TWO)));
+        $this->assertFalse($stub->isEqualTo(new AbstractEnumStub(AbstractEnumStub::VALUE_ONE)));
     }
 }

@@ -39,6 +39,13 @@ By extending `Gears\Enum\AbstractEnum` you can easily have an Enum class
 ```php
 use Gears\Enum\AbstractEnum;
 
+/**
+ * @method static self DAILY()
+ * @method static self WEEKLY()
+ * @method static self BIWEEKLY()
+ * @method static self MONTHLY()
+ * @method static self YEARLY()
+ */
 class DatePeriodEnum extends AbstractEnum
 {
     public const DAILY = 'daily';
@@ -50,11 +57,16 @@ class DatePeriodEnum extends AbstractEnum
 
 $period = new DatePeriodEnum('daily');
 
-$period->isEqualTo(new DatePeriodEnum(DatePeriodEnum::DAILY)); // true
-$period->isEqualTo(new DatePeriodEnum(DatePeriodEnum::MONTHLY)); // false
+$period->isEqualTo(DatePeriodEnum::DAILY()); // true
+$period->getValue() === DatePeriodEnum::DAILY; // true
+
+$period->isEqualTo(DatePeriodEnum::MONTHLY()); // false
+$period->getValue() === DatePeriodEnum::YEARLY; // false
 
 $period->getValue(); // daily
 ```
+
+_By adding the `@method` references on class docblock your editor should be able to help you with autocompletes_ 
 
 ## Contributing
 

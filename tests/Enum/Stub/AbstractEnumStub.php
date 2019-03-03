@@ -17,6 +17,9 @@ use Gears\Enum\AbstractEnum;
 
 /**
  * Abstract enum stub class.
+ *
+ * @method static self VALUE_ONE()
+ * @method static self VALUE_TWO()
  */
 class AbstractEnumStub extends AbstractEnum
 {

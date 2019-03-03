@@ -54,6 +54,33 @@ abstract class AbstractEnum implements Enum
     }
 
     /**
+     * Value based static constructor.
+     *
+     * @param string  $value
+     * @param mixed[] $params
+     *
+     * @return self
+     */
+    final public static function __callStatic(string $value, array $params)
+    {
+        if (\count($params) !== 0) {
+            throw new InvalidEnumValueException('Enum static constructor must be called with no parameters');
+        }
+
+        $validValues = static::getValidValues();
+
+        if (!\array_key_exists($value, $validValues)) {
+            throw new InvalidEnumValueException(\sprintf(
+                '%s is not a valid value for enum %s',
+                $value,
+                static::class
+            ));
+        }
+
+        return new static($validValues[$value]);
+    }
+
+    /**
      * {@inheritdoc}
      */
     final public function isEqualTo(Enum $enum): bool
