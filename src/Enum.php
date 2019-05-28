@@ -28,6 +28,15 @@ interface Enum
     public function isEqualTo(self $enum): bool;
 
     /**
+     * Check enum equality to any of an array.
+     *
+     * @param self[] $enums
+     *
+     * @return bool
+     */
+    public function isAnyOf(array $enums): bool;
+
+    /**
      * Get enum value.
      *
      * @return mixed

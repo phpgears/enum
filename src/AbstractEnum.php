@@ -28,7 +28,7 @@ abstract class AbstractEnum implements Enum
      *
      * @var array
      */
-    protected static $enumConstantsMap = [];
+    protected static $enumCacheMap = [];
 
     /**
      * Enum value.
@@ -91,6 +91,20 @@ abstract class AbstractEnum implements Enum
     /**
      * {@inheritdoc}
      */
+    final public function isAnyOf(array $enums): bool
+    {
+        foreach ($enums as $enum) {
+            if ($this->isEqualTo($enum)) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
     final public function getValue()
     {
         return $this->value;
@@ -121,13 +135,13 @@ abstract class AbstractEnum implements Enum
      */
     private static function getValidValues(): array
     {
-        $class = static::class;
+        $enumClass = static::class;
 
-        if (!isset(static::$enumConstantsMap[$class])) {
-            static::$enumConstantsMap[$class] = (new \ReflectionClass($class))->getConstants();
+        if (!isset(static::$enumCacheMap[$enumClass])) {
+            static::$enumCacheMap[$enumClass] = (new \ReflectionClass($enumClass))->getConstants();
         }
 
-        return static::$enumConstantsMap[$class];
+        return static::$enumCacheMap[$enumClass];
     }
 
     /**

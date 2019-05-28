@@ -32,11 +32,19 @@ class AbstractEnumTest extends TestCase
 
     public function testCreation(): void
     {
-        $stub = new AbstractEnumStub(AbstractEnumStub::VALUE_ONE);
+        $stub = new AbstractEnumStub('one');
 
         $this->assertSame(AbstractEnumStub::VALUE_ONE, $stub->getValue());
         $this->assertTrue($stub->isEqualTo(new AbstractEnumStub(AbstractEnumStub::VALUE_ONE)));
         $this->assertFalse($stub->isEqualTo(new AbstractEnumStub(AbstractEnumStub::VALUE_TWO)));
+        $this->assertTrue($stub->isAnyOf([
+            new AbstractEnumStub(AbstractEnumStub::VALUE_TWO),
+            new AbstractEnumStub(AbstractEnumStub::VALUE_ONE),
+        ]));
+        $this->assertFalse($stub->isAnyOf([
+            new AbstractEnumStub(AbstractEnumStub::VALUE_TWO),
+            new AbstractEnumStub(AbstractEnumStub::VALUE_THREE),
+        ]));
     }
 
     /**
@@ -59,10 +67,12 @@ class AbstractEnumTest extends TestCase
 
     public function testStaticCreation(): void
     {
-        $stub = AbstractEnumStub::VALUE_TWO();
+        $stub = AbstractEnumStub::VALUE_ONE();
 
-        $this->assertSame(AbstractEnumStub::VALUE_TWO, $stub->getValue());
-        $this->assertTrue($stub->isEqualTo(new AbstractEnumStub(AbstractEnumStub::VALUE_TWO)));
-        $this->assertFalse($stub->isEqualTo(new AbstractEnumStub(AbstractEnumStub::VALUE_ONE)));
+        $this->assertSame('one', $stub->getValue());
+        $this->assertTrue($stub->isEqualTo(AbstractEnumStub::VALUE_ONE()));
+        $this->assertFalse($stub->isEqualTo(AbstractEnumStub::VALUE_TWO()));
+        $this->assertTrue($stub->isAnyOf([AbstractEnumStub::VALUE_TWO(), AbstractEnumStub::VALUE_ONE()]));
+        $this->assertFalse($stub->isAnyOf([AbstractEnumStub::VALUE_TWO(), AbstractEnumStub::VALUE_THREE()]));
     }
 }

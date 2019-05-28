@@ -20,10 +20,13 @@ use Gears\Enum\AbstractEnum;
  *
  * @method static self VALUE_ONE()
  * @method static self VALUE_TWO()
+ * @method static self VALUE_THREE()
  */
 class AbstractEnumStub extends AbstractEnum
 {
     public const VALUE_ONE = 'one';
 
     public const VALUE_TWO = 'two';
+
+    public const VALUE_THREE = 'three';
 }

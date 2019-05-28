@@ -46,7 +46,7 @@ use Gears\Enum\AbstractEnum;
  * @method static self MONTHLY()
  * @method static self YEARLY()
  */
-class DatePeriodEnum extends AbstractEnum
+class DatePeriod extends AbstractEnum
 {
     public const DAILY = 'daily';
     public const WEEKLY = 'weekly';
@@ -55,13 +55,15 @@ class DatePeriodEnum extends AbstractEnum
     public const YEARLY = 'yearly';
 }
 
-$period = new DatePeriodEnum('daily');
+$period = new DatePeriod('daily');
 
-$period->isEqualTo(DatePeriodEnum::DAILY()); // true
-$period->getValue() === DatePeriodEnum::DAILY; // true
+$period->getValue() === DatePeriod::DAILY; // true
+$period->isEqualTo(DatePeriod::DAILY()); // true
+$period->isAnyOf([DatePeriod::DAILY(), DatePeriod::WEEKLY()]); // true
 
-$period->isEqualTo(DatePeriodEnum::MONTHLY()); // false
-$period->getValue() === DatePeriodEnum::YEARLY; // false
+$period->getValue() === DatePeriod::YEARLY; // false
+$period->isEqualTo(DatePeriod::MONTHLY()); // false
+$period->isAnyOf([DatePeriod::MONTHLY(), DatePeriod::YEARLY()]); // false
 
 $period->getValue(); // daily
 ```
