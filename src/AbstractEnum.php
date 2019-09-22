@@ -46,7 +46,7 @@ abstract class AbstractEnum implements Enum
      */
     final public function __construct($value)
     {
-        $this->checkImmutability();
+        $this->assertImmutable();
 
         $this->checkValue($value);
 
@@ -71,7 +71,7 @@ abstract class AbstractEnum implements Enum
 
         if (!\array_key_exists($value, $validValues)) {
             throw new InvalidEnumValueException(\sprintf(
-                '%s is not a valid value for enum %s',
+                '"%s" is not a valid value for enum "%s"',
                 $value,
                 static::class
             ));
@@ -121,7 +121,7 @@ abstract class AbstractEnum implements Enum
     {
         if (!\in_array($value, static::getValidValues(), true)) {
             throw new InvalidEnumValueException(\sprintf(
-                '%s is not a valid value for enum %s',
+                '"%s" is not a valid value for enum "%s"',
                 $value,
                 static::class
             ));
