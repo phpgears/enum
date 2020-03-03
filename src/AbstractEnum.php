@@ -26,6 +26,13 @@ abstract class AbstractEnum implements Enum
     use ImmutabilityBehaviour;
 
     /**
+     * Class is final check.
+     *
+     * @var bool
+     */
+    protected static $finalAlreadyChecked = false;
+
+    /**
      * Enum class constants map.
      *
      * @var array
@@ -44,15 +51,33 @@ abstract class AbstractEnum implements Enum
      *
      * @param mixed $value
      *
+     * @throws EnumException
      * @throws InvalidEnumValueException
      */
     final public function __construct($value)
     {
         $this->assertImmutable();
+        $this->assertFinal();
 
         $this->checkValue($value);
 
         $this->value = $value;
+    }
+
+    /**
+     * Assert enum is final.
+     *
+     * @throws EnumException
+     */
+    private function assertFinal(): void
+    {
+        if (!static::$finalAlreadyChecked) {
+            if (!(new \ReflectionClass(static::class))->isFinal()) {
+                throw new EnumException(\sprintf('Enum class "%s" should be final', static::class));
+            }
+
+            static::$finalAlreadyChecked = true;
+        }
     }
 
     /**

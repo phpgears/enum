@@ -16,17 +16,11 @@ namespace Gears\Enum\Tests\Stub;
 use Gears\Enum\AbstractEnum;
 
 /**
- * Abstract enum stub class.
+ * Non final enum stub class.
  *
- * @method static self VALUE_ONE()
- * @method static self VALUE_TWO()
- * @method static self VALUE_THREE()
+ * @method static self VALUE_ZERO()
  */
-final class AbstractEnumStub extends AbstractEnum
+class NonFinalEnumStub extends AbstractEnum
 {
-    public const VALUE_ONE = 'one';
-
-    public const VALUE_TWO = 'two';
-
-    public const VALUE_THREE = 'three';
+    public const VALUE_ZERO = 0;
 }

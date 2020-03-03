@@ -17,6 +17,7 @@ use Gears\Enum\Exception\EnumException;
 use Gears\Enum\Exception\InvalidEnumNameException;
 use Gears\Enum\Exception\InvalidEnumValueException;
 use Gears\Enum\Tests\Stub\AbstractEnumStub;
+use Gears\Enum\Tests\Stub\NonFinalEnumStub;
 use PHPUnit\Framework\TestCase;
 
 /**
@@ -24,6 +25,14 @@ use PHPUnit\Framework\TestCase;
  */
 class AbstractEnumTest extends TestCase
 {
+    public function testNonFinal(): void
+    {
+        $this->expectException(EnumException::class);
+        $this->expectExceptionMessage('Enum class "Gears\Enum\Tests\Stub\NonFinalEnumStub" should be final');
+
+        NonFinalEnumStub::VALUE_ZERO();
+    }
+
     public function testInvalidValue(): void
     {
         $this->expectException(InvalidEnumValueException::class);
