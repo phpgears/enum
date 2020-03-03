@@ -14,8 +14,8 @@ declare(strict_types=1);
 namespace Gears\Enum\Exception;
 
 /**
- * InvalidEnumValueException class.
+ * InvalidEnumNameException class.
  */
-class InvalidEnumValueException extends EnumException
+class InvalidEnumNameException extends EnumException
 {
 }

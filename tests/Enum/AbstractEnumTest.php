@@ -13,6 +13,8 @@ declare(strict_types=1);
 
 namespace Gears\Enum\Tests;
 
+use Gears\Enum\Exception\EnumException;
+use Gears\Enum\Exception\InvalidEnumNameException;
 use Gears\Enum\Exception\InvalidEnumValueException;
 use Gears\Enum\Tests\Stub\AbstractEnumStub;
 use PHPUnit\Framework\TestCase;
@@ -51,9 +53,9 @@ class AbstractEnumTest extends TestCase
 
     public function testInvalidStaticValue(): void
     {
-        $this->expectException(InvalidEnumValueException::class);
+        $this->expectException(InvalidEnumNameException::class);
         $this->expectExceptionMessage(
-            '"UNKNOWN" is not a valid value for enum "Gears\Enum\Tests\Stub\AbstractEnumStub"'
+            '"UNKNOWN" is not a valid enumerator for enum "Gears\Enum\Tests\Stub\AbstractEnumStub"'
         );
 
         AbstractEnumStub::UNKNOWN();
@@ -61,7 +63,7 @@ class AbstractEnumTest extends TestCase
 
     public function testInvalidStaticCreation(): void
     {
-        $this->expectException(InvalidEnumValueException::class);
+        $this->expectException(EnumException::class);
         $this->expectExceptionMessage('Enum static constructor must be called with no parameters');
 
         AbstractEnumStub::VALUE_ONE('param');
@@ -69,7 +71,7 @@ class AbstractEnumTest extends TestCase
 
     public function testStaticCreation(): void
     {
-        $stub = AbstractEnumStub::VALUE_ONE();
+        $stub = AbstractEnumStub::Value_One();
 
         static::assertSame('one', $stub->getValue());
         static::assertTrue($stub->isEqualTo(AbstractEnumStub::VALUE_ONE()));

@@ -13,6 +13,8 @@ declare(strict_types=1);
 
 namespace Gears\Enum;
 
+use Gears\Enum\Exception\EnumException;
+use Gears\Enum\Exception\InvalidEnumNameException;
 use Gears\Enum\Exception\InvalidEnumValueException;
 use Gears\Immutability\ImmutabilityBehaviour;
 
@@ -56,28 +58,29 @@ abstract class AbstractEnum implements Enum
     /**
      * Value based static constructor.
      *
-     * @param string  $value
+     * @param string  $name
      * @param mixed[] $params
      *
      * @return self
      */
-    final public static function __callStatic(string $value, array $params)
+    final public static function __callStatic(string $name, array $params)
     {
         if (\count($params) !== 0) {
-            throw new InvalidEnumValueException('Enum static constructor must be called with no parameters');
+            throw new EnumException('Enum static constructor must be called with no parameters');
         }
 
-        $validValues = static::getValidValues();
+        $enumerator = static::normalizeName($name);
+        $enumerators = static::getEnumerators();
 
-        if (!\array_key_exists($value, $validValues)) {
-            throw new InvalidEnumValueException(\sprintf(
-                '"%s" is not a valid value for enum "%s"',
-                $value,
+        if (!\array_key_exists($enumerator, $enumerators)) {
+            throw new InvalidEnumNameException(\sprintf(
+                '"%s" is not a valid enumerator for enum "%s"',
+                $name,
                 static::class
             ));
         }
 
-        return new static($validValues[$value]);
+        return new static($enumerators[$enumerator]);
     }
 
     /**
@@ -119,7 +122,7 @@ abstract class AbstractEnum implements Enum
      */
     private function checkValue($value): void
     {
-        if (!\in_array($value, static::getValidValues(), true)) {
+        if (!\in_array($value, static::getEnumerators(), true)) {
             throw new InvalidEnumValueException(\sprintf(
                 '"%s" is not a valid value for enum "%s"',
                 $value,
@@ -129,19 +132,38 @@ abstract class AbstractEnum implements Enum
     }
 
     /**
-     * Get list of valid enum values.
+     * Get list of enumerators.
      *
      * @return array<string, mixed>
      */
-    private static function getValidValues(): array
+    private static function getEnumerators(): array
     {
-        $enumClass = static::class;
+        $class = static::class;
 
-        if (!isset(static::$enumCacheMap[$enumClass])) {
-            static::$enumCacheMap[$enumClass] = (new \ReflectionClass($enumClass))->getConstants();
+        if (!isset(static::$enumCacheMap[$class])) {
+            $constants = [];
+            foreach ((new \ReflectionClass($class))->getReflectionConstants() as $reflectionConstant) {
+                if ($reflectionConstant->isPublic()) {
+                    $constants[static::normalizeName($reflectionConstant->getName())] = $reflectionConstant->getValue();
+                }
+            }
+
+            static::$enumCacheMap[$class] = $constants;
         }
 
-        return static::$enumCacheMap[$enumClass];
+        return static::$enumCacheMap[$class];
+    }
+
+    /**
+     * Normalize name.
+     *
+     * @param string $name
+     *
+     * @return string
+     */
+    private static function normalizeName(string $name): string
+    {
+        return \strtoupper($name);
     }
 
     /**
