@@ -114,6 +114,37 @@ abstract class AbstractEnum implements Enum
     }
 
     /**
+     * @return mixed[]
+     */
+    final public function __sleep(): array
+    {
+        throw new EnumException(\sprintf('Enum "%s" cannot be serialized', static::class));
+    }
+
+    final public function __wakeup(): void
+    {
+        throw new EnumException(\sprintf('Enum "%s" cannot be unserialized', static::class));
+    }
+
+    /**
+     * @return mixed[]
+     *
+     * @SuppressWarnings(PHPMD.CamelCaseMethodName)
+     */
+    final public function __serialize(): array
+    {
+        throw new EnumException(\sprintf('Enum "%s" cannot be serialized', static::class));
+    }
+
+    /**
+     * @SuppressWarnings(PHPMD.CamelCaseMethodName)
+     */
+    final public function __unserialize(): void
+    {
+        throw new EnumException(\sprintf('Enum "%s" cannot be unserialized', static::class));
+    }
+
+    /**
      * Check enum value validity.
      *
      * @param mixed $value

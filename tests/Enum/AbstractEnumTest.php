@@ -69,6 +69,22 @@ class AbstractEnumTest extends TestCase
         AbstractEnumStub::VALUE_ONE('param');
     }
 
+    public function testNoSerialization(): void
+    {
+        $this->expectException(EnumException::class);
+        $this->expectExceptionMessage('Enum "Gears\Enum\Tests\Stub\AbstractEnumStub" cannot be serialized');
+
+        \serialize(AbstractEnumStub::VALUE_ONE());
+    }
+
+    public function testNoDeserialization(): void
+    {
+        $this->expectException(EnumException::class);
+        $this->expectExceptionMessage('Enum "Gears\Enum\Tests\Stub\AbstractEnumStub" cannot be unserialized');
+
+        \unserialize('O:38:"Gears\Enum\Tests\Stub\AbstractEnumStub":0:{}');
+    }
+
     public function testStaticCreation(): void
     {
         $stub = AbstractEnumStub::Value_One();
