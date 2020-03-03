@@ -144,6 +144,10 @@ abstract class AbstractEnum implements Enum
         throw new EnumException(\sprintf('Enum "%s" cannot be unserialized', static::class));
     }
 
+    final public function __clone()
+    {
+    }
+
     /**
      * Check enum value validity.
      *

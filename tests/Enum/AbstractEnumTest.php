@@ -95,4 +95,13 @@ class AbstractEnumTest extends TestCase
         static::assertTrue($stub->isAnyOf([AbstractEnumStub::VALUE_TWO(), AbstractEnumStub::VALUE_ONE()]));
         static::assertFalse($stub->isAnyOf([AbstractEnumStub::VALUE_TWO(), AbstractEnumStub::VALUE_THREE()]));
     }
+
+    public function testClone(): void
+    {
+        $original = AbstractEnumStub::VALUE_TWO();
+        $clone = clone $original;
+
+        static::assertTrue($original !== $clone);
+        static::assertTrue($original->isEqualTo($clone));
+    }
 }
