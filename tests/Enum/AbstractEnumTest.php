@@ -16,8 +16,9 @@ namespace Gears\Enum\Tests;
 use Gears\Enum\Exception\EnumException;
 use Gears\Enum\Exception\InvalidEnumNameException;
 use Gears\Enum\Exception\InvalidEnumValueException;
-use Gears\Enum\Tests\Stub\AbstractEnumStub;
+use Gears\Enum\Tests\Stub\CardinalEnumStub;
 use Gears\Enum\Tests\Stub\NonFinalEnumStub;
+use Gears\Enum\Tests\Stub\OrdinalEnumStub;
 use PHPUnit\Framework\TestCase;
 
 /**
@@ -33,41 +34,67 @@ class AbstractEnumTest extends TestCase
         NonFinalEnumStub::VALUE_ZERO();
     }
 
+    public function testInvalidFromEnum(): void
+    {
+        $this->expectException(InvalidEnumValueException::class);
+        $this->expectExceptionMessageRegExp(
+            '/^Enum ".+\\OrdinalEnumStub" cannot be created from enum ".+\\CardinalEnumStub"$/'
+        );
+
+        new OrdinalEnumStub(CardinalEnumStub::VALUE_FIRST());
+    }
+
     public function testInvalidValue(): void
     {
         $this->expectException(InvalidEnumValueException::class);
         $this->expectExceptionMessage(
-            '"unknown" is not a valid value for enum "Gears\Enum\Tests\Stub\AbstractEnumStub"'
+            '"unknown" is not a valid value for enum "Gears\Enum\Tests\Stub\CardinalEnumStub"'
         );
 
-        new AbstractEnumStub('unknown');
+        new CardinalEnumStub('unknown');
     }
 
-    public function testCreation(): void
+    /**
+     * @dataProvider creationDataProvider
+     *
+     * @param mixed $enumValue
+     */
+    public function testCreation($enumValue): void
     {
-        $stub = new AbstractEnumStub('one');
+        $stub = new OrdinalEnumStub($enumValue);
 
-        static::assertSame(AbstractEnumStub::VALUE_ONE, $stub->getValue());
-        static::assertTrue($stub->isEqualTo(new AbstractEnumStub(AbstractEnumStub::VALUE_ONE)));
-        static::assertFalse($stub->isEqualTo(new AbstractEnumStub(AbstractEnumStub::VALUE_TWO)));
+        static::assertSame(OrdinalEnumStub::VALUE_ONE, $stub->getValue());
+        static::assertTrue($stub->isEqualTo(new OrdinalEnumStub(OrdinalEnumStub::VALUE_ONE)));
+        static::assertFalse($stub->isEqualTo(OrdinalEnumStub::VALUE_TWO()));
         static::assertTrue($stub->isAnyOf([
-            new AbstractEnumStub(AbstractEnumStub::VALUE_TWO),
-            new AbstractEnumStub(AbstractEnumStub::VALUE_ONE),
+            new OrdinalEnumStub(OrdinalEnumStub::VALUE_TWO),
+            new OrdinalEnumStub(OrdinalEnumStub::VALUE_ONE),
         ]));
         static::assertFalse($stub->isAnyOf([
-            new AbstractEnumStub(AbstractEnumStub::VALUE_TWO),
-            new AbstractEnumStub(AbstractEnumStub::VALUE_THREE),
+            new OrdinalEnumStub(OrdinalEnumStub::VALUE_TWO),
+            new OrdinalEnumStub(OrdinalEnumStub::VALUE_THREE),
         ]));
+    }
+
+    /**
+     * @return array<mixed[]>
+     */
+    public function creationDataProvider(): array
+    {
+        return [
+            [OrdinalEnumStub::VALUE_ONE()],
+            [OrdinalEnumStub::VALUE_ONE],
+        ];
     }
 
     public function testInvalidStaticValue(): void
     {
         $this->expectException(InvalidEnumNameException::class);
         $this->expectExceptionMessage(
-            '"UNKNOWN" is not a valid enumerator for enum "Gears\Enum\Tests\Stub\AbstractEnumStub"'
+            '"UNKNOWN" is not a valid enumerator for enum "Gears\Enum\Tests\Stub\CardinalEnumStub"'
         );
 
-        AbstractEnumStub::UNKNOWN();
+        CardinalEnumStub::UNKNOWN();
     }
 
     public function testInvalidStaticCreation(): void
@@ -75,39 +102,39 @@ class AbstractEnumTest extends TestCase
         $this->expectException(EnumException::class);
         $this->expectExceptionMessage('Enum static constructor must be called with no parameters');
 
-        AbstractEnumStub::VALUE_ONE('param');
+        OrdinalEnumStub::VALUE_ONE('param');
+    }
+
+    public function testStaticCreation(): void
+    {
+        $stub = OrdinalEnumStub::Value_One();
+
+        static::assertSame('one', $stub->getValue());
+        static::assertTrue($stub->isEqualTo(OrdinalEnumStub::VALUE_ONE()));
+        static::assertFalse($stub->isEqualTo(OrdinalEnumStub::VALUE_TWO()));
+        static::assertTrue($stub->isAnyOf([OrdinalEnumStub::VALUE_TWO(), OrdinalEnumStub::VALUE_ONE()]));
+        static::assertFalse($stub->isAnyOf([OrdinalEnumStub::VALUE_TWO(), OrdinalEnumStub::VALUE_THREE()]));
     }
 
     public function testNoSerialization(): void
     {
         $this->expectException(EnumException::class);
-        $this->expectExceptionMessage('Enum "Gears\Enum\Tests\Stub\AbstractEnumStub" cannot be serialized');
+        $this->expectExceptionMessage('Enum "Gears\Enum\Tests\Stub\OrdinalEnumStub" cannot be serialized');
 
-        \serialize(AbstractEnumStub::VALUE_ONE());
+        \serialize(OrdinalEnumStub::VALUE_ONE());
     }
 
     public function testNoDeserialization(): void
     {
         $this->expectException(EnumException::class);
-        $this->expectExceptionMessage('Enum "Gears\Enum\Tests\Stub\AbstractEnumStub" cannot be unserialized');
+        $this->expectExceptionMessage('Enum "Gears\Enum\Tests\Stub\OrdinalEnumStub" cannot be unserialized');
 
-        \unserialize('O:38:"Gears\Enum\Tests\Stub\AbstractEnumStub":0:{}');
-    }
-
-    public function testStaticCreation(): void
-    {
-        $stub = AbstractEnumStub::Value_One();
-
-        static::assertSame('one', $stub->getValue());
-        static::assertTrue($stub->isEqualTo(AbstractEnumStub::VALUE_ONE()));
-        static::assertFalse($stub->isEqualTo(AbstractEnumStub::VALUE_TWO()));
-        static::assertTrue($stub->isAnyOf([AbstractEnumStub::VALUE_TWO(), AbstractEnumStub::VALUE_ONE()]));
-        static::assertFalse($stub->isAnyOf([AbstractEnumStub::VALUE_TWO(), AbstractEnumStub::VALUE_THREE()]));
+        \unserialize('O:37:"Gears\Enum\Tests\Stub\OrdinalEnumStub":0:{}');
     }
 
     public function testClone(): void
     {
-        $original = AbstractEnumStub::VALUE_TWO();
+        $original = OrdinalEnumStub::VALUE_TWO();
         $clone = clone $original;
 
         static::assertTrue($original !== $clone);

@@ -26,16 +26,16 @@ abstract class AbstractEnum implements Enum
     use ImmutabilityBehaviour;
 
     /**
-     * Class is final check.
+     * Class is final checked map.
      *
-     * @var bool
+     * @var bool[]
      */
-    protected static $finalAlreadyChecked = false;
+    protected static $finalCheckMap = [];
 
     /**
      * Enum class constants map.
      *
-     * @var array
+     * @var array<string, mixed[]>
      */
     protected static $enumCacheMap = [];
 
@@ -49,7 +49,7 @@ abstract class AbstractEnum implements Enum
     /**
      * AbstractEnum constructor.
      *
-     * @param mixed $value
+     * @param static|mixed $value
      *
      * @throws EnumException
      * @throws InvalidEnumValueException
@@ -61,7 +61,7 @@ abstract class AbstractEnum implements Enum
 
         $this->checkValue($value);
 
-        $this->value = $value;
+        $this->value = $value instanceof Enum ? $value->getValue() : $value;
     }
 
     /**
@@ -71,13 +71,17 @@ abstract class AbstractEnum implements Enum
      */
     private function assertFinal(): void
     {
-        if (!static::$finalAlreadyChecked) {
-            if (!(new \ReflectionClass(static::class))->isFinal()) {
-                throw new EnumException(\sprintf('Enum class "%s" should be final', static::class));
-            }
+        $class = static::class;
 
-            static::$finalAlreadyChecked = true;
+        if (isset(static::$finalCheckMap[$class])) {
+            return;
         }
+
+        if (!(new \ReflectionClass(static::class))->isFinal()) {
+            throw new EnumException(\sprintf('Enum class "%s" should be final', static::class));
+        }
+
+        static::$finalCheckMap[$class] = true;
     }
 
     /**
@@ -176,12 +180,24 @@ abstract class AbstractEnum implements Enum
     /**
      * Check enum value validity.
      *
-     * @param mixed $value
+     * @param static|mixed $value
      *
      * @throws InvalidEnumValueException
      */
     private function checkValue($value): void
     {
+        if ($value instanceof Enum) {
+            if (\get_class($value) !== static::class) {
+                throw new InvalidEnumValueException(\sprintf(
+                    'Enum "%s" cannot be created from enum "%s"',
+                    static::class,
+                    \get_class($value)
+                ));
+            }
+
+            return;
+        }
+
         if (!\in_array($value, static::getEnumerators(), true)) {
             throw new InvalidEnumValueException(\sprintf(
                 '"%s" is not a valid value for enum "%s"',

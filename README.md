@@ -14,7 +14,7 @@
 
 Immutable Enum objects for PHP
 
-Other languages have the concept of Enum and while there is an extension in PHP for enums it's not so widely spread
+Other languages have the concept of Enum and while there is an extension in PHP for enums it's not available by default or widely spread
 
 The implementation of an Enum class is not so difficult, but it should cover value validation and be immutable so its value cannot be changed
 
@@ -34,7 +34,7 @@ Require composer autoload file
 require './vendor/autoload.php';
 ```
 
-By extending `Gears\Enum\AbstractEnum` you can easily have an Enum class
+By extending `Gears\Enum\AbstractEnum` you can easily have Enum classes
 
 ```php
 use Gears\Enum\AbstractEnum;
@@ -66,9 +66,18 @@ $period->isEqualTo(DatePeriod::MONTHLY()); // false
 $period->isAnyOf([DatePeriod::MONTHLY(), DatePeriod::YEARLY()]); // false
 
 $period->getValue(); // daily
+
+
+$newPeriod = new DatePeriod($period);
+
+$newPeriod->getValue() === DatePeriod::DAILY; // true
+$newPeriod->getValue() === $period->getValue(); // true
+$newPeriod->isEqualTo($period); // true
+
+$newPeriod->getValue(); // daily
 ```
 
-_By adding the `@method` references on class docblock your editor should be able to help you with autocompletes_ 
+_It is advised to add `@method` annotation references on class docblock for your editor to be able to help you with auto-completion_ 
 
 ## Contributing
 
