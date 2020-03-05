@@ -156,9 +156,7 @@ abstract class AbstractEnum implements Enum
     }
 
     /**
-     * @return mixed[]
-     *
-     * @SuppressWarnings(PHPMD.CamelCaseMethodName)
+     * @return array<string, mixed>
      */
     final public function __serialize(): array
     {
@@ -166,9 +164,11 @@ abstract class AbstractEnum implements Enum
     }
 
     /**
-     * @SuppressWarnings(PHPMD.CamelCaseMethodName)
+     * @param array<string, mixed> $data
+     *
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
-    final public function __unserialize(): void
+    final public function __unserialize(array $data): void
     {
         throw new EnumException(\sprintf('Enum "%s" cannot be unserialized', static::class));
     }
