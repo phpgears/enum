@@ -143,7 +143,7 @@ abstract class AbstractEnum implements Enum
     }
 
     /**
-     * @return mixed[]
+     * @return string[]
      */
     final public function __sleep(): array
     {
