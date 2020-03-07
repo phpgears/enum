@@ -143,24 +143,11 @@ abstract class AbstractEnum implements Enum
     }
 
     /**
-     * @return string[]
-     */
-    final public function __sleep(): array
-    {
-        throw new EnumException(\sprintf('Enum "%s" cannot be serialized', static::class));
-    }
-
-    final public function __wakeup(): void
-    {
-        throw new EnumException(\sprintf('Enum "%s" cannot be unserialized', static::class));
-    }
-
-    /**
      * @return array<string, mixed>
      */
     final public function __serialize(): array
     {
-        throw new EnumException(\sprintf('Enum "%s" cannot be serialized', static::class));
+        return ['value' => $this->value];
     }
 
     /**
@@ -170,7 +157,39 @@ abstract class AbstractEnum implements Enum
      */
     final public function __unserialize(array $data): void
     {
-        throw new EnumException(\sprintf('Enum "%s" cannot be unserialized', static::class));
+        $this->assertImmutable();
+        $this->assertFinal();
+
+        $value = $data['value'];
+
+        $this->checkValue($value);
+
+        $this->value = $value;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    final public function serialize(): string
+    {
+        return \serialize($this->value);
+    }
+
+    /**
+     * {@inheritdoc}
+     *
+     * @param mixed $serialized
+     */
+    public function unserialize($serialized): void
+    {
+        $this->assertImmutable();
+        $this->assertFinal();
+
+        $value = \unserialize($serialized, ['allowed_classes' => false]);
+
+        $this->checkValue($value);
+
+        $this->value = $value;
     }
 
     final public function __clone()

@@ -116,20 +116,16 @@ class AbstractEnumTest extends TestCase
         static::assertFalse($stub->isAnyOf([OrdinalEnumStub::VALUE_TWO(), OrdinalEnumStub::VALUE_THREE()]));
     }
 
-    public function testNoSerialization(): void
+    public function testSerialization(): void
     {
-        $this->expectException(EnumException::class);
-        $this->expectExceptionMessage('Enum "Gears\Enum\Tests\Stub\OrdinalEnumStub" cannot be serialized');
+        $stub = OrdinalEnumStub::VALUE_ONE();
 
-        \serialize(OrdinalEnumStub::VALUE_ONE());
-    }
+        $serialized = \version_compare(\PHP_VERSION, '7.4.0') >= 0
+            ? 'O:37:"Gears\Enum\Tests\Stub\OrdinalEnumStub":1:{s:5:"value";s:3:"one";}'
+            : 'C:37:"Gears\Enum\Tests\Stub\OrdinalEnumStub":10:{s:3:"one";}';
 
-    public function testNoDeserialization(): void
-    {
-        $this->expectException(EnumException::class);
-        $this->expectExceptionMessage('Enum "Gears\Enum\Tests\Stub\OrdinalEnumStub" cannot be unserialized');
-
-        \unserialize('O:37:"Gears\Enum\Tests\Stub\OrdinalEnumStub":0:{}');
+        static::assertSame($serialized, \serialize($stub));
+        static::assertSame('one', (\unserialize($serialized))->getValue());
     }
 
     public function testClone(): void

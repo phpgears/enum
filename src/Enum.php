@@ -16,7 +16,7 @@ namespace Gears\Enum;
 /**
  * Enum interface.
  */
-interface Enum
+interface Enum extends \Serializable
 {
     /**
      * Check enum equality.
