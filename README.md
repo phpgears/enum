@@ -46,7 +46,7 @@ use Gears\Enum\AbstractEnum;
  * @method static self MONTHLY()
  * @method static self YEARLY()
  */
-class DatePeriod extends AbstractEnum
+final class DatePeriod extends AbstractEnum
 {
     public const DAILY = 'daily';
     public const WEEKLY = 'weekly';
@@ -76,6 +76,8 @@ $newPeriod->isEqualTo($period); // true
 
 $newPeriod->getValue(); // daily
 ```
+
+Enums **must** always be defined as final
 
 _It is advised to add `@method` annotation references on class docblock for your editor to be able to help you with auto-completion_ 
 
