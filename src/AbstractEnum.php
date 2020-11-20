@@ -78,7 +78,7 @@ abstract class AbstractEnum implements Enum
         }
 
         if (!(new \ReflectionClass(static::class))->isFinal()) {
-            throw new EnumException(\sprintf('Enum class "%s" should be final', static::class));
+            throw new EnumException(\sprintf('Enum class "%s" should be final.', static::class));
         }
 
         static::$finalCheckMap[$class] = true;
@@ -95,7 +95,7 @@ abstract class AbstractEnum implements Enum
     final public static function __callStatic(string $name, array $params)
     {
         if (\count($params) !== 0) {
-            throw new EnumException('Enum static constructor must be called with no parameters');
+            throw new EnumException('Enum static constructor must be called with no parameters.');
         }
 
         $enumerator = static::normalizeName($name);
@@ -103,7 +103,7 @@ abstract class AbstractEnum implements Enum
 
         if (!\array_key_exists($enumerator, $enumerators)) {
             throw new InvalidEnumNameException(\sprintf(
-                '"%s" is not a valid enumerator for enum "%s"',
+                '"%s" is not a valid enumerator for enum "%s".',
                 $name,
                 static::class
             ));
@@ -208,7 +208,7 @@ abstract class AbstractEnum implements Enum
         if ($value instanceof Enum) {
             if (\get_class($value) !== static::class) {
                 throw new InvalidEnumValueException(\sprintf(
-                    'Enum "%s" cannot be created from enum "%s"',
+                    'Enum "%s" cannot be created from enum "%s".',
                     static::class,
                     \get_class($value)
                 ));
@@ -219,7 +219,7 @@ abstract class AbstractEnum implements Enum
 
         if (!\in_array($value, static::getEnumerators(), true)) {
             throw new InvalidEnumValueException(\sprintf(
-                '"%s" is not a valid value for enum "%s"',
+                '"%s" is not a valid value for enum "%s".',
                 $value,
                 static::class
             ));

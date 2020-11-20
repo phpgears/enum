@@ -29,7 +29,7 @@ class AbstractEnumTest extends TestCase
     public function testNonFinal(): void
     {
         $this->expectException(EnumException::class);
-        $this->expectExceptionMessage('Enum class "Gears\Enum\Tests\Stub\NonFinalEnumStub" should be final');
+        $this->expectExceptionMessage('Enum class "Gears\Enum\Tests\Stub\NonFinalEnumStub" should be final.');
 
         NonFinalEnumStub::VALUE_ZERO();
     }
@@ -38,7 +38,7 @@ class AbstractEnumTest extends TestCase
     {
         $this->expectException(InvalidEnumValueException::class);
         $this->expectExceptionMessageRegExp(
-            '/^Enum ".+\\OrdinalEnumStub" cannot be created from enum ".+\\CardinalEnumStub"$/'
+            '/^Enum ".+\\OrdinalEnumStub" cannot be created from enum ".+\\CardinalEnumStub"\.$/'
         );
 
         new OrdinalEnumStub(CardinalEnumStub::VALUE_FIRST());
@@ -48,7 +48,7 @@ class AbstractEnumTest extends TestCase
     {
         $this->expectException(InvalidEnumValueException::class);
         $this->expectExceptionMessage(
-            '"unknown" is not a valid value for enum "Gears\Enum\Tests\Stub\CardinalEnumStub"'
+            '"unknown" is not a valid value for enum "Gears\Enum\Tests\Stub\CardinalEnumStub".'
         );
 
         new CardinalEnumStub('unknown');
@@ -91,7 +91,7 @@ class AbstractEnumTest extends TestCase
     {
         $this->expectException(InvalidEnumNameException::class);
         $this->expectExceptionMessage(
-            '"UNKNOWN" is not a valid enumerator for enum "Gears\Enum\Tests\Stub\CardinalEnumStub"'
+            '"UNKNOWN" is not a valid enumerator for enum "Gears\Enum\Tests\Stub\CardinalEnumStub".'
         );
 
         CardinalEnumStub::UNKNOWN();
@@ -100,7 +100,7 @@ class AbstractEnumTest extends TestCase
     public function testInvalidStaticCreation(): void
     {
         $this->expectException(EnumException::class);
-        $this->expectExceptionMessage('Enum static constructor must be called with no parameters');
+        $this->expectExceptionMessage('Enum static constructor must be called with no parameters.');
 
         OrdinalEnumStub::VALUE_ONE('param');
     }

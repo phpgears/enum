@@ -2,7 +2,7 @@
 [![Latest Version](https://img.shields.io/packagist/v/phpgears/enum.svg?style=flat-square)](https://packagist.org/packages/phpgears/enum)
 [![License](https://img.shields.io/github/license/phpgears/enum.svg?style=flat-square)](https://github.com/phpgears/enum/blob/master/LICENSE)
 
-[![Build Status](https://img.shields.io/travis/phpgears/enum.svg?style=flat-square)](https://travis-ci.org/phpgears/enum)
+[![Build Status](https://img.shields.io/travis/com/phpgears/enum.svg?style=flat-square)](https://travis-ci.com/github/phpgears/enum)
 [![Style Check](https://styleci.io/repos/148840983/shield)](https://styleci.io/repos/148840983)
 [![Code Quality](https://img.shields.io/scrutinizer/g/phpgears/enum.svg?style=flat-square)](https://scrutinizer-ci.com/g/phpgears/enum)
 [![Code Coverage](https://img.shields.io/coveralls/phpgears/enum.svg?style=flat-square)](https://coveralls.io/github/phpgears/enum)
